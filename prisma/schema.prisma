@@ -1,0 +1,67 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id           Int       @id @default(autoincrement())
+  email        String    @unique
+  phone_number String    @unique
+  first_name   String
+  last_name    String
+  password     String
+  channel      Channel[]
+  Parent       Member[]  @relation("Parent")
+  Child        Member[]  @relation("Child")
+  Upload       Upload[]  @relation("User")
+  created_at   DateTime  @default(now())
+  updated_at   DateTime  @updatedAt
+}
+
+model Channel {
+  id            Int      @id @default(autoincrement())
+  user_id       Int
+  user          User     @relation(fields: [user_id], references: [id])
+  channel_name  String
+  channel_image String
+  access_token  String
+  refresh_token String
+  member        Member[]
+  upload        Upload[]
+  expires_at    DateTime
+  created_at    DateTime @default(now())
+  updated_at    DateTime @updatedAt
+}
+
+model Member {
+  id           Int     @id @default(autoincrement())
+  user_id      Int
+  parent_id    Int
+  Parent       User    @relation("Parent", fields: [parent_id], references: [id])
+  Child        User    @relation("Child", fields: [user_id], references: [id])
+  channel_id   Int
+  channel      Channel @relation(fields: [channel_id], references: [id])
+  member_name  String
+  member_email String
+}
+
+model Upload {
+  id                Int     @id @default(autoincrement())
+  video_link        String
+  video_title       String
+  video_description String
+  channel_id        Int
+  channel           Channel @relation(fields: [channel_id], references: [id])
+  user_id           Int
+  User              User    @relation("User", fields: [user_id], references: [id])
+}
