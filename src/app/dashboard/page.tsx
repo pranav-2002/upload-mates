@@ -1,7 +1,7 @@
 import Template from "@/components/template/Template";
-import Dashboard from "@/pages/dashboard/Dashboard";
+import Dashboard from "@/views/dashboard/Dashboard";
 
-export default function () {
+export default function Page() {
   return (
     <Template title="Dashboard">
       <Dashboard />

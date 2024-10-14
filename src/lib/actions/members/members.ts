@@ -12,7 +12,7 @@ type addNewMemberType = {
 export const addNewMember = async (data: addNewMemberType) => {
   const session = await getServerSession(authOptions);
 
-  if (!session.user) {
+  if (!session) {
     return redirect(`${process.env.NEXTAUTH_URL}/auth/login`);
   }
 

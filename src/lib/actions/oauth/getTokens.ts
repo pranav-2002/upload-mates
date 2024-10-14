@@ -2,7 +2,7 @@ import prisma from "@/db";
 
 export const getTokens = async (tokenId: number, userId: number) => {
   try {
-    const userTokens = await prisma.credentials.findUnique({
+    const userTokens = await prisma.channel.findUnique({
       where: {
         id: tokenId,
         user_id: userId,

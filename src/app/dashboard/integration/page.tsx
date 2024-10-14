@@ -1,7 +1,7 @@
 import Template from "@/components/template/Template";
-import Integration from "@/pages/integration/Integration";
+import Integration from "@/views/integration/Integration";
 
-export default function () {
+export default function Page() {
   return (
     <Template title="Youtube Integration">
       <Integration />

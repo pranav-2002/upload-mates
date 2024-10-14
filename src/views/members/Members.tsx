@@ -29,7 +29,7 @@ import {
 } from "@/components/ui/select";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
-import { PlusCircle, Mail, Slack, Twitter } from "lucide-react";
+import { PlusCircle } from "lucide-react";
 import { useSession } from "next-auth/react";
 import { getChannelNames } from "@/lib/actions/channels/channels";
 import { addNewMember, getAllMembers } from "@/lib/actions/members/members";
@@ -54,7 +54,7 @@ export default function Members() {
 
   // Get channel names
   const handleOpen = async () => {
-    // @ts-ignore: Unreachable code error
+    // @ts-expect-error: Unreachable code error
     const userId = session?.user?.id;
     const response = await getChannelNames(userId);
     if (response.status === "Success") {
@@ -99,7 +99,6 @@ export default function Members() {
   };
 
   const getMembersData = async () => {
-    // @ts-ignore: Unreachable code error
     const response = await getAllMembers();
     if (response.status === "Success") {
       setMembers(response.data as any);

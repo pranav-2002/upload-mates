@@ -1,7 +1,7 @@
 import Template from "@/components/template/Template";
-import VideoUpload from "@/pages/upload/VideoUpload";
+import VideoUpload from "@/views/uploads/VideoUpload";
 
-export default function () {
+export default function Page() {
   return (
     <Template title="Upload Video">
       <VideoUpload />

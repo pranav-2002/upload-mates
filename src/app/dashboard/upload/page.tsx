@@ -1,7 +1,7 @@
 import Template from "@/components/template/Template";
-import Upload from "@/pages/upload/Upload";
+import Upload from "@/views/uploads/Upload";
 
-export default function () {
+export default function Page() {
   return (
     <Template title="Your Authorized Channels">
       <Upload />

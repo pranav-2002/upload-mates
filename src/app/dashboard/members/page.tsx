@@ -1,7 +1,7 @@
 import Template from "@/components/template/Template";
-import Members from "@/pages/members/Members";
+import Members from "@/views/members/Members";
 
-export default function () {
+export default function Page() {
   return (
     <Template title="Authorized Members">
       <Members />
