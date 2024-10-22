@@ -57,7 +57,8 @@ model Member {
 
 model Upload {
   id                Int     @id @default(autoincrement())
-  video_link        String
+  video_url         String
+  thumbnail_url     String
   video_title       String
   video_description String
   channel_id        Int

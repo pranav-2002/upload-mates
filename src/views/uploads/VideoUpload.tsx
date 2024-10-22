@@ -14,6 +14,7 @@ import { useParams } from "next/navigation";
 export default function VideoUpload() {
   type metaDataType = {
     fileType: string;
+    thumbnailType: string;
     videoTile: string;
     videoDescription: string;
     channelId: number;
@@ -22,6 +23,7 @@ export default function VideoUpload() {
   const params = useParams<{ id: string }>();
 
   const [loading, setLoading] = useState(false);
+  const [thumbnail, setThumbnail] = useState<File | null>(null);
   const [videoFile, setVideoFile] = useState<File | null>(null);
   const [videoPreview, setVideoPreview] = useState<string | null>(null);
   const [videoMetaData, setVideoMetaData] = useState({
@@ -76,6 +78,12 @@ export default function VideoUpload() {
     }
   };
 
+  // Handle thumbnail change
+  const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    setThumbnail(file || null);
+  };
+
   // Video Upload to S3
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -84,18 +92,23 @@ export default function VideoUpload() {
     // AWS S3 Upload
     const metaData: metaDataType = {
       fileType: videoFile?.type || "",
+      thumbnailType: thumbnail?.type || "",
       videoTile: videoMetaData.title,
       videoDescription: videoMetaData.description,
       channelId: parseInt(params?.id || ""),
     };
 
-    // Adding Video Data to the object
+    // Adding Video data to the object
     const videoData = new FormData();
     videoData.append("file", videoFile || "");
 
+    // Adding the thumbnail to the object
+    const thumbnailData = new FormData();
+    thumbnailData.append("file", thumbnail || "");
+
     try {
       // S3 Upload API Call
-      const response = await uploadVideo(videoData, metaData);
+      const response = await uploadVideo(videoData, thumbnailData, metaData);
       if (response.status === "Success") {
         toast({
           title: response.status,
@@ -107,6 +120,7 @@ export default function VideoUpload() {
         });
         setVideoPreview(null);
         setVideoFile(null);
+        setThumbnail(null);
       } else {
         toast({
           title: response.status,
@@ -178,6 +192,15 @@ export default function VideoUpload() {
                   onChange={handleFileChange}
                   disabled={videoPreview ? true : false}
                   required
+                />
+              </div>
+              <div className="flex flex-col space-y-1.5">
+                <Label htmlFor="title">Video Thumbnail</Label>
+                <Input
+                  id="thumbnail"
+                  type="file"
+                  onChange={handleImageChange}
+                  accept="image/png, image/jpeg"
                 />
               </div>
               <div className="flex flex-col space-y-1.5">

@@ -11,6 +11,7 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
+import Link from "next/link";
 
 export default function ChannelCard({ channel }: any) {
   const [showTokens, setShowTokens] = useState(false);
@@ -62,14 +63,12 @@ export default function ChannelCard({ channel }: any) {
             </>
           )}
         </Button>
-        <Button
-          variant="ghost"
-          size="sm"
-          className="text-primary hover:text-primary-foreground hover:bg-primary"
-        >
-          View Requests
-          <ChevronRight className="w-4 h-4 ml-2" />
-        </Button>
+        <Link href={`/dashboard/requests?channelId=${channel.id}`}>
+          <Button variant="outline" size="sm">
+            View Requests
+            <ChevronRight className="w-4 h-4 ml-2" />
+          </Button>
+        </Link>
       </CardFooter>
     </Card>
   );
