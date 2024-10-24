@@ -6,7 +6,7 @@ export default async function UploadDetails({ videoId }: { videoId: string }) {
 
   return (
     <div className="w-full mx-auto">
-      {/* @ts-expect-error */}
+      {/* @ts-expect-error: videoDetails type might not match exactly with what UploadRequestCard expects */}
       <UploadRequestCard videoDetails={videoDetails} />
     </div>
   );
