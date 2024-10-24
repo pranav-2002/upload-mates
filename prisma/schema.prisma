@@ -65,4 +65,11 @@ model Upload {
   channel           Channel @relation(fields: [channel_id], references: [id])
   user_id           Int
   User              User    @relation("User", fields: [user_id], references: [id])
+  status            Ststus  @default(PENDING)
+}
+
+enum Ststus {
+  PENDING
+  APPROVED
+  REJECTED
 }

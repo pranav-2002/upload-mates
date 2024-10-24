@@ -6,7 +6,7 @@ import { S3Client } from "@aws-sdk/client-s3";
 import { createPresignedPost } from "@aws-sdk/s3-presigned-post";
 import { nanoid } from "nanoid";
 import { getServerSession } from "next-auth";
-import { redirect } from "next/navigation";
+import { notFound, redirect } from "next/navigation";
 
 type metaDataType = {
   fileType: string;
@@ -127,6 +127,87 @@ export const uploadVideo = async (
         message: "Failed to save video (AWS Error)",
       };
     }
+  } catch (error) {
+    console.log(error);
+    return {
+      status: "Error",
+      message: "Internal Server Error",
+    };
+  }
+};
+
+export const getVideoDetails = async (videoId: number) => {
+  const session = await getServerSession(authOptions);
+
+  if (!session.user) {
+    return redirect(`${process.env.NEXTAUTH_URL}/auth/login`);
+  }
+
+  try {
+    const videoDetails = await prisma.upload.findUnique({
+      where: {
+        id: videoId,
+      },
+      include: {
+        channel: {
+          select: {
+            channel_name: true,
+          },
+        },
+        User: {
+          select: {
+            first_name: true,
+            last_name: true,
+          },
+        },
+      },
+    });
+
+    if (!videoDetails) {
+      return notFound();
+    }
+
+    return {
+      status: "Success",
+      message: "Video saved successfully",
+      data: videoDetails,
+    };
+  } catch (error) {
+    console.log(error);
+    return {
+      status: "Error",
+      message: "Internal Server Error",
+      data: [],
+    };
+  }
+};
+
+type statusType = "REJECTED" | "PENDING" | "APPROVED";
+export const modifyUploadRequest = async (
+  videoId: number,
+  status: statusType
+) => {
+  try {
+    const modification = await prisma.upload.update({
+      where: {
+        id: videoId,
+      },
+      data: {
+        status: status,
+      },
+    });
+
+    if (!modification) {
+      return {
+        status: "Error",
+        message: "Something went wrong!",
+      };
+    }
+
+    return {
+      status: "Success",
+      message: `Video ${status.toLocaleLowerCase()} successfully! Please ask the uploader to upload the video on YouTube`,
+    };
   } catch (error) {
     console.log(error);
     return {
