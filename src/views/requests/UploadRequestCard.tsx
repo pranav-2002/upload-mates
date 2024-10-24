@@ -41,6 +41,7 @@ export default function UploadRequestCard({
       video_description: string;
       channel_id: number;
       user_id: number;
+      status: "APPROVED" | "REJECTED" | "PENDING";
     };
   };
 }) {
