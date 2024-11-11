@@ -10,6 +10,7 @@ import { Button } from "@/components/ui/button";
 import { ArrowRight } from "lucide-react";
 import Link from "next/link";
 import { getAllUploadRequests } from "@/lib/actions/requests/uploadRequests";
+import Image from "next/image";
 
 export default async function VideoUploadRequests({
   searchParams,
@@ -30,9 +31,11 @@ export default async function VideoUploadRequests({
             </CardHeader>
             <CardContent className="flex-grow">
               <div className="relative">
-                <img
+                <Image
                   src={video.thumbnail_url}
                   alt={video.video_title}
+                  width={100}
+                  height={100}
                   className="w-full h-48 object-cover rounded-md"
                 />
               </div>

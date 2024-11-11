@@ -18,6 +18,7 @@ import {
 import { CheckCircle, XCircle } from "lucide-react";
 import { modifyUploadRequest } from "@/lib/actions/uploads/upload";
 import { useToast } from "@/hooks/use-toast";
+import Image from "next/image";
 
 export default function UploadRequestCard({
   videoDetails,
@@ -130,10 +131,11 @@ export default function UploadRequestCard({
           <div className="space-y-2">
             <Label htmlFor="thumbnail">Thumbnail</Label>
             <AspectRatio ratio={4 / 3} className="bg-muted">
-              <img
-                id="thumbnail"
+              <Image
                 src={videoDetails.data?.thumbnail_url}
                 alt="Video thumbnail"
+                width={100}
+                height={100}
                 className="rounded-md object-cover w-full h-full"
               />
             </AspectRatio>

@@ -8,6 +8,7 @@ import { Play, User, Youtube } from "lucide-react";
 import { Button } from "../ui/button";
 import { handleVideoUpload } from "@/lib/actions/youtube/youtube";
 import { useToast } from "@/hooks/use-toast";
+import Image from "next/image";
 
 interface VideoUploadRequest {
   id: number;
@@ -83,9 +84,11 @@ export default function VideoUploadRequestCard({
         <DialogTrigger asChild>
           <div className="relative cursor-pointer group">
             <AspectRatio ratio={16 / 9}>
-              <img
+              <Image
                 src={request.thumbnail_url}
                 alt={request.video_title}
+                width={100}
+                height={100}
                 className="object-cover w-full h-full"
               />
             </AspectRatio>
