@@ -2,6 +2,7 @@
 
 import { SessionProvider } from "next-auth/react";
 import { ThemeProvider } from "./themes/theme-provider";
+import NextTopLoader from "nextjs-toploader";
 
 export default function Providers({
   children,
@@ -17,6 +18,7 @@ export default function Providers({
         disableTransitionOnChange
       >
         {children}
+        <NextTopLoader />
       </ThemeProvider>
     </SessionProvider>
   );
