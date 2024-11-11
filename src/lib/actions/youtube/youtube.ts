@@ -72,7 +72,7 @@ export async function handleVideoUpload(body: {
   try {
     const session = await getServerSession(authOptions);
 
-    if (!session) {
+    if (!session.user) {
       redirect(`${process.env.NEXTAUTH_URL}/auth/login`);
     }
 
