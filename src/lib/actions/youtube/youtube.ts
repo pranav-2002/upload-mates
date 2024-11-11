@@ -14,7 +14,9 @@ import { redirect } from "next/navigation";
 // Download Video
 async function downloadVideo(url: string): Promise<string> {
   const videoId = nanoid();
-  const filePath = path.join("src/lib/actions/youtube/temp", `${videoId}.mp4`);
+  const tempDir = process.env.VERCEL ? "/tmp" : "src/lib/actions/youtube/temp";
+  const filePath = path.join(tempDir, `${videoId}.mp4`);
+
   const writer = fs.createWriteStream(filePath);
 
   const response = await axios({
@@ -68,7 +70,7 @@ export async function handleVideoUpload(body: {
   videoId: number;
   channelId: number;
 }) {
-  let tempFilePath = "";
+  // let tempFilePath = "";
   try {
     const session = await getServerSession(authOptions);
 
@@ -104,7 +106,7 @@ export async function handleVideoUpload(body: {
 
     // Download the video
     const filePath = await downloadVideo(body.videoUrl);
-    tempFilePath = filePath;
+    // tempFilePath = filePath;
 
     // Upload to YouTube using the OAuth client
     const uploadResponse = await uploadVideoToYouTube(
@@ -115,7 +117,7 @@ export async function handleVideoUpload(body: {
     );
 
     // Clean up the temporary file after upload
-    fs.unlinkSync(filePath);
+    // fs.unlinkSync(filePath);
 
     if (uploadResponse) {
       await prisma.youtube_Upload.create({
@@ -132,7 +134,7 @@ export async function handleVideoUpload(body: {
     };
   } catch (error) {
     console.error("Error uploading video:", error);
-    fs.unlinkSync(tempFilePath);
+    // fs.unlinkSync(tempFilePath);
     return {
       status: "Error",
       message: "Internal Server Error",
