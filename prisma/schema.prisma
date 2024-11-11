@@ -44,32 +44,45 @@ model Channel {
 }
 
 model Member {
-  id           Int     @id @default(autoincrement())
+  id           Int      @id @default(autoincrement())
   user_id      Int
   parent_id    Int
-  Parent       User    @relation("Parent", fields: [parent_id], references: [id])
-  Child        User    @relation("Child", fields: [user_id], references: [id])
+  Parent       User     @relation("Parent", fields: [parent_id], references: [id])
+  Child        User     @relation("Child", fields: [user_id], references: [id])
   channel_id   Int
-  channel      Channel @relation(fields: [channel_id], references: [id])
+  channel      Channel  @relation(fields: [channel_id], references: [id])
   member_name  String
   member_email String
+  created_at   DateTime @default(now())
+  updated_at   DateTime @updatedAt
 }
 
 model Upload {
-  id                Int     @id @default(autoincrement())
+  id                Int              @id @default(autoincrement())
   video_url         String
   thumbnail_url     String
   video_title       String
   video_description String
   channel_id        Int
-  channel           Channel @relation(fields: [channel_id], references: [id])
+  channel           Channel          @relation(fields: [channel_id], references: [id])
   user_id           Int
-  User              User    @relation("User", fields: [user_id], references: [id])
-  status            Status  @default(PENDING)
+  User              User             @relation("User", fields: [user_id], references: [id])
+  status            Status           @default(PENDING)
+  Youtube_Upload    Youtube_Upload[] @relation("Upload")
+  created_at        DateTime         @default(now())
+  updated_at        DateTime         @updatedAt
 }
 
 enum Status {
   PENDING
   APPROVED
   REJECTED
+}
+
+model Youtube_Upload {
+  id         Int      @id @default(autoincrement())
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+  upload_id  Int
+  Upload     Upload   @relation("Upload", fields: [upload_id], references: [id])
 }

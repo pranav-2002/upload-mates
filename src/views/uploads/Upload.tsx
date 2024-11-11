@@ -48,6 +48,13 @@ export default async function Upload() {
                   </Link>
                 </Button>
               </CardFooter>
+              <CardFooter>
+                <Button asChild className="w-full">
+                  <Link href={`/dashboard/upload/requests`}>
+                    View Upload Requests
+                  </Link>
+                </Button>
+              </CardFooter>
             </Card>
           ))}
       </div>

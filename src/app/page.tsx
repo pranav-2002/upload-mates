@@ -1,7 +1,5 @@
+import HomePage from "@/views/home/HomePage";
+
 export default function Home() {
-  return (
-    <div>
-      <h1>Landing Page</h1>
-    </div>
-  );
+  return <HomePage />;
 }

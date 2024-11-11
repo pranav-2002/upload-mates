@@ -13,7 +13,21 @@ import {
 } from "@/components/ui/card";
 import Link from "next/link";
 
-export default function ChannelCard({ channel }: any) {
+type channelType = {
+  channel: {
+    id: number;
+    created_at: Date;
+    updated_at: Date;
+    user_id: number;
+    channel_name: string;
+    channel_image: string;
+    access_token: string;
+    refresh_token: string;
+    expires_at: Date;
+  };
+};
+
+export default function ChannelCard({ channel }: channelType) {
   const [showTokens, setShowTokens] = useState(false);
 
   return (

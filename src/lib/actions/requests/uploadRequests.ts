@@ -3,7 +3,7 @@
 import prisma from "@/db";
 import { authOptions } from "@/lib/auth";
 import { getServerSession } from "next-auth";
-import { notFound, redirect } from "next/navigation";
+import { redirect } from "next/navigation";
 
 export const getAllUploadRequests = async (channelId: number) => {
   const session = await getServerSession(authOptions);
@@ -58,5 +58,33 @@ export const getAllUploadRequests = async (channelId: number) => {
       status: "Error",
       description: "Internal Server Error",
     };
+  }
+};
+
+export const getUserUploadRequests = async () => {
+  const session = await getServerSession(authOptions);
+
+  if (!session.user) {
+    return redirect(`${process.env.NEXTAUTH_URL}/auth/login`);
+  }
+
+  try {
+    const uploadRequests = await prisma.upload.findMany({
+      where: {
+        user_id: session.user.id,
+      },
+      include: {
+        channel: {
+          select: {
+            channel_name: true,
+          },
+        },
+      },
+    });
+
+    return uploadRequests;
+  } catch (error) {
+    console.log(error);
+    throw new Error("Internal Server Error");
   }
 };

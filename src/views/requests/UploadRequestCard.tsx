@@ -161,7 +161,7 @@ export default function UploadRequestCard({
             <div className="space-y-2">
               <Label htmlFor="channelName">Upload to channel</Label>
               <p id="channelName" className="text-sm">
-                {videoDetails.data?.channel.channel_name}
+                {videoDetails?.data?.channel?.channel_name}
               </p>
             </div>
           </div>

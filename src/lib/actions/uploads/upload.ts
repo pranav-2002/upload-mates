@@ -206,7 +206,7 @@ export const modifyUploadRequest = async (
 
     return {
       status: "Success",
-      message: `Video ${status.toLocaleLowerCase()} successfully! Please ask the uploader to upload the video on YouTube`,
+      message: `Video ${status.toLocaleLowerCase()} successfully!`,
     };
   } catch (error) {
     console.log(error);
