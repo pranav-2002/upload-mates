@@ -92,8 +92,8 @@ export default function Support() {
               Contact Support
             </CardTitle>
             <CardDescription className="text-center">
-              We're here to help. Fill out the form below and we'll get back to
-              you as soon as possible.
+              We&apos;re here to help. Fill out the form below and we&apos;ll
+              get back to you as soon as possible.
             </CardDescription>
           </CardHeader>
           <CardContent>

@@ -93,7 +93,7 @@ const HomePage = async () => {
                 </CardHeader>
                 <CardContent>
                   Review and approve videos before they go live, maintaining
-                  full control over your channel's content.
+                  full control over your channel&apos;s content.
                 </CardContent>
               </Card>
             </div>
