@@ -52,7 +52,7 @@ model Member {
   channel_id   Int
   channel      Channel  @relation(fields: [channel_id], references: [id])
   member_name  String
-  member_email String
+  member_email String   @unique
   created_at   DateTime @default(now())
   updated_at   DateTime @updatedAt
 }

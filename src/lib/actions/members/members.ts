@@ -19,7 +19,7 @@ export const addNewMember = async (data: addNewMemberType) => {
   try {
     const { memberEmail, selectedChannel } = data;
 
-    // Check if existing member exists
+    // Check if the member has signed up
     const user = await prisma.user.findUnique({
       where: {
         email: memberEmail,
@@ -35,6 +35,20 @@ export const addNewMember = async (data: addNewMemberType) => {
       return {
         status: "Error",
         message: "Ask this member to sign up first",
+      };
+    }
+
+    // Check if the member already exists
+    const member = await prisma.member.findUnique({
+      where: {
+        member_email: memberEmail,
+      },
+    });
+
+    if (member) {
+      return {
+        status: "Error",
+        message: "Member already exists",
       };
     }
 
@@ -116,6 +130,28 @@ export const getAllMemberChannels = async () => {
     return {
       status: "Error",
       message: "Something went wrong, please try again later!",
+    };
+  }
+};
+
+export const deleteAMember = async (memberId: number) => {
+  try {
+    const deletedMember = await prisma.member.delete({
+      where: {
+        id: memberId,
+      },
+    });
+    return {
+      status: "Success",
+      message: "Member Removed Successfully",
+      data: deletedMember,
+    };
+  } catch (error) {
+    console.log(error);
+    return {
+      status: "Error",
+      message: "Something went wrong, please try again later!",
+      data: error,
     };
   }
 };

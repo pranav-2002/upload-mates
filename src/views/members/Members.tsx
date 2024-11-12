@@ -32,7 +32,11 @@ import { Badge } from "@/components/ui/badge";
 import { PlusCircle } from "lucide-react";
 import { useSession } from "next-auth/react";
 import { getChannelNames } from "@/lib/actions/channels/channels";
-import { addNewMember, getAllMembers } from "@/lib/actions/members/members";
+import {
+  addNewMember,
+  deleteAMember,
+  getAllMembers,
+} from "@/lib/actions/members/members";
 import { useToast } from "@/hooks/use-toast";
 
 export default function Members() {
@@ -115,8 +119,13 @@ export default function Members() {
     getMembersData();
   }, []);
 
-  const handleRemoveMember = () => {
-    console.log("clicked");
+  const handleRemoveMember = async (memberId: number) => {
+    const { status, message } = await deleteAMember(memberId);
+    toast({
+      title: status,
+      description: message,
+      variant: status === "Error" ? "destructive" : "default",
+    });
   };
 
   return (
@@ -226,7 +235,10 @@ export default function Members() {
                     </span>
                   </Badge>
                   <Badge variant="destructive" className="cursor-pointer">
-                    <span onClick={handleRemoveMember} className="capitalize">
+                    <span
+                      onClick={() => handleRemoveMember(member.id)}
+                      className="capitalize"
+                    >
                       Remove
                     </span>
                   </Badge>
