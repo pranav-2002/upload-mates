@@ -115,6 +115,10 @@ export default function Members() {
     getMembersData();
   }, []);
 
+  const handleRemoveMember = () => {
+    console.log("clicked");
+  };
+
   return (
     <div className="container mx-auto">
       <Card>
@@ -215,14 +219,18 @@ export default function Members() {
                     </p>
                   </div>
                 </div>
-                <Badge
-                  variant="secondary"
-                  className="flex items-center space-x-1"
-                >
-                  <span className="capitalize">
-                    Channel Id - {member.channel_id}
-                  </span>
-                </Badge>
+                <div className="flex items-center space-x-4">
+                  <Badge variant="secondary">
+                    <span className="capitalize">
+                      Channel Id - {member.channel_id}
+                    </span>
+                  </Badge>
+                  <Badge variant="destructive" className="cursor-pointer">
+                    <span onClick={handleRemoveMember} className="capitalize">
+                      Remove
+                    </span>
+                  </Badge>
+                </div>
               </div>
             ))}
           </div>

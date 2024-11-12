@@ -10,12 +10,30 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import Link from "next/link";
 import { getAllMemberChannels } from "@/lib/actions/members/members";
+import NoContent from "@/components/no-content/NoContent";
 
 export default async function Upload() {
-  const { channels } = await getAllMemberChannels();
+  const { channels, status, message } = await getAllMemberChannels();
 
   return (
     <div className="container mx-auto p-6">
+      {channels?.length === 0 ? (
+        <NoContent
+          title="No Authorized Channels Found"
+          description="Please ask your friend to add you as a member"
+          buttonContent="Get Started"
+          link="/dashboard/integration"
+        />
+      ) : status === "Error" ? (
+        <NoContent
+          title={status}
+          description={message}
+          buttonContent="Home"
+          link="/dashboard"
+        />
+      ) : (
+        ""
+      )}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         {channels &&
           channels.map((data) => (

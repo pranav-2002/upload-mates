@@ -57,15 +57,14 @@ export default function VideoUploadRequestCard({
       console.log(response);
       if (response.status === "Error") {
         toast({
-          title: response.status || "Error",
-          description: response.message || "Something went wrong!",
+          title: response.status,
+          description: response.message,
           variant: "destructive",
         });
       } else {
         toast({
-          title: response.status || "Success",
-          description:
-            response.message || "Video Uploaded to Youtube Successfully",
+          title: response.status,
+          description: response.message,
         });
       }
     } catch (error) {

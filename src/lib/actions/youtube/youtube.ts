@@ -1,46 +1,35 @@
 "use server";
 
 import axios from "axios";
-import { nanoid } from "nanoid";
-import path from "path";
-import fs from "fs";
 import { google } from "googleapis";
 import prisma from "@/db";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
 import { OAuth2Client } from "google-auth-library";
-import { redirect } from "next/navigation";
+import { notFound, redirect } from "next/navigation";
 
-// Download Video
-async function downloadVideo(url: string): Promise<string> {
-  const videoId = nanoid();
-  const tempDir = process.env.VERCEL ? "/tmp" : "src/lib/actions/youtube/temp";
-  const filePath = path.join(tempDir, `${videoId}.mp4`);
-
-  const writer = fs.createWriteStream(filePath);
-
-  const response = await axios({
-    url,
-    method: "GET",
-    responseType: "stream",
-  });
-
-  response.data.pipe(writer);
-
-  return filePath;
-}
-
+// Youtube Video Upload
 async function uploadVideoToYouTube(
   authClient: OAuth2Client,
-  filePath: string,
+  videoUrl: string,
   title: string,
   description: string
 ) {
+  // Authentication
   const youtube = google.youtube({
     version: "v3",
     auth: authClient,
   });
 
+  // Downloading Video
+  const response = await axios({
+    url: videoUrl,
+    method: "GET",
+    responseType: "stream",
+    timeout: 30000,
+  });
+
+  // Video Insert Request
   const res = await youtube.videos.insert({
     part: ["snippet", "status"],
     requestBody: {
@@ -55,7 +44,7 @@ async function uploadVideoToYouTube(
       },
     },
     media: {
-      body: fs.createReadStream(filePath),
+      body: response.data,
     },
   });
 
@@ -70,7 +59,6 @@ export async function handleVideoUpload(body: {
   videoId: number;
   channelId: number;
 }) {
-  // let tempFilePath = "";
   try {
     const session = await getServerSession(authOptions);
 
@@ -85,10 +73,7 @@ export async function handleVideoUpload(body: {
     });
 
     if (!channel) {
-      return {
-        status: "Error",
-        message: "Unauthorized Error",
-      };
+      notFound();
     }
 
     const oauth2Client = new OAuth2Client(
@@ -104,20 +89,13 @@ export async function handleVideoUpload(body: {
     const { credentials } = await oauth2Client.refreshAccessToken();
     oauth2Client.setCredentials(credentials);
 
-    // Download the video
-    const filePath = await downloadVideo(body.videoUrl);
-    // tempFilePath = filePath;
-
     // Upload to YouTube using the OAuth client
     const uploadResponse = await uploadVideoToYouTube(
       oauth2Client,
-      filePath,
+      body.videoUrl,
       body.videoTitle,
       body.videoDescription
     );
-
-    // Clean up the temporary file after upload
-    // fs.unlinkSync(filePath);
 
     if (uploadResponse) {
       await prisma.youtube_Upload.create({
@@ -134,7 +112,6 @@ export async function handleVideoUpload(body: {
     };
   } catch (error) {
     console.error("Error uploading video:", error);
-    // fs.unlinkSync(tempFilePath);
     return {
       status: "Error",
       message: "Internal Server Error",

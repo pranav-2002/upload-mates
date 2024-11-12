@@ -11,6 +11,7 @@ import { ArrowRight } from "lucide-react";
 import Link from "next/link";
 import { getAllUploadRequests } from "@/lib/actions/requests/uploadRequests";
 import Image from "next/image";
+import NoContent from "@/components/no-content/NoContent";
 
 export default async function VideoUploadRequests({
   searchParams,
@@ -23,6 +24,23 @@ export default async function VideoUploadRequests({
 
   return (
     <div className="container mx-auto">
+      {videoRequests.data?.length === 0 ? (
+        <NoContent
+          title="No Upload Requests"
+          description="You don't have any videos to review yet!"
+          buttonContent="Add Members"
+          link="/dashboard/members"
+        />
+      ) : videoRequests.status === "Error" ? (
+        <NoContent
+          title={videoRequests.status}
+          description={videoRequests.description}
+          buttonContent="Home"
+          link="/dashboard"
+        />
+      ) : (
+        ""
+      )}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         {videoRequests?.data?.map((video) => (
           <Card key={video.id} className="flex flex-col">
